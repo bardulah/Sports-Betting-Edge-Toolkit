@@ -1,0 +1,162 @@
+# Bookmaker Configuration
+# =======================
+
+bookmakers:
+  # Slovak Bookmakers
+  tipsport:
+    name: "Tipsport"
+    country: "Slovakia"
+    type: "soft"
+    base_url: "https://www.tipsport.sk"
+    api_url: "https://www.tipsport.sk/rest"
+    margin_estimate: 0.06  # ~6% margin
+    max_payout: 100000
+    currency: "EUR"
+    requires_login: false
+    scraping_method: "api"
+    sports:
+      football: "/futbal"
+      hockey: "/hokej"
+      tennis: "/tenis"
+    odds_format: "decimal"
+    features:
+      - live_betting
+      - cash_out
+      - bet_builder
+
+  fortuna:
+    name: "Fortuna"
+    country: "Slovakia"
+    type: "soft"
+    base_url: "https://www.ifortuna.sk"
+    api_url: "https://www.ifortuna.sk/api"
+    margin_estimate: 0.055
+    max_payout: 100000
+    currency: "EUR"
+    requires_login: false
+    scraping_method: "api"
+    sports:
+      football: "/futbal"
+      hockey: "/hokej"
+      tennis: "/tenis"
+    odds_format: "decimal"
+    features:
+      - live_betting
+      - cash_out
+
+  nike:
+    name: "Niké"
+    country: "Slovakia"
+    type: "soft"
+    base_url: "https://www.nike.sk"
+    api_url: "https://www.nike.sk/api"
+    margin_estimate: 0.058
+    max_payout: 50000
+    currency: "EUR"
+    requires_login: false
+    scraping_method: "api"
+    sports:
+      football: "/futbal"
+      hockey: "/hokej"
+      tennis: "/tenis"
+    odds_format: "decimal"
+    features:
+      - live_betting
+      - superodds
+
+  doxxbet:
+    name: "DOXXbet"
+    country: "Slovakia"
+    type: "soft"
+    base_url: "https://www.doxxbet.sk"
+    api_url: "https://www.doxxbet.sk/api"
+    margin_estimate: 0.05
+    max_payout: 50000
+    currency: "EUR"
+    requires_login: false
+    scraping_method: "api"
+    sports:
+      football: "/futbal"
+      hockey: "/hokej"
+      tennis: "/tenis"
+    odds_format: "decimal"
+    features:
+      - live_betting
+
+  # International Sharp Books
+  pinnacle:
+    name: "Pinnacle"
+    country: "International"
+    type: "sharp"
+    base_url: "https://www.pinnacle.com"
+    api_url: "https://www.pinnacle.com/api"
+    margin_estimate: 0.02  # ~2% margin (sharpest)
+    max_payout: 250000
+    currency: "EUR"
+    requires_login: true
+    requires_vpn: true
+    scraping_method: "selenium"
+    sports:
+      football: "/soccer"
+      hockey: "/hockey"
+      tennis: "/tennis"
+    odds_format: "decimal"
+    features:
+      - highest_limits
+      - lowest_margin
+      - no_account_limits
+    notes: "Gold standard for true odds. Use as baseline for +EV calculations."
+
+  bet365:
+    name: "Bet365"
+    country: "International"
+    type: "medium"
+    base_url: "https://www.bet365.com"
+    api_url: null
+    margin_estimate: 0.04
+    max_payout: 100000
+    currency: "EUR"
+    requires_login: true
+    requires_vpn: true
+    scraping_method: "selenium"
+    sports:
+      football: "/soccer"
+      hockey: "/ice-hockey"
+      tennis: "/tennis"
+    odds_format: "decimal"
+    features:
+      - live_betting
+      - cash_out
+      - live_streaming
+      - early_payout
+    notes: "Good odds, but may limit winning accounts."
+
+# Sharp vs Soft classification
+book_classification:
+  sharp:
+    description: "Low margin, high limits, won't limit winners"
+    books: ["pinnacle"]
+    use_for_true_odds: true
+
+  medium:
+    description: "Decent margins, may limit heavy winners"
+    books: ["bet365"]
+    use_for_true_odds: false
+
+  soft:
+    description: "Higher margins, lower limits, good for +EV"
+    books: ["tipsport", "fortuna", "nike", "doxxbet"]
+    use_for_true_odds: false
+
+# Margin removal formulas
+margin_removal:
+  methods:
+    - name: "multiplicative"
+      description: "Distribute margin equally across outcomes"
+    - name: "additive"
+      description: "Remove margin by adding to each probability"
+    - name: "power"
+      description: "Shin method - accounts for favorite-longshot bias"
+    - name: "odds_ratio"
+      description: "Keeps odds ratio constant"
+  default_method: "power"

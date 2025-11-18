@@ -1,0 +1,124 @@
+# Sports Betting Edge Toolkit Configuration
+# ==========================================
+
+# Database settings
+database:
+  path: "data/betting_edge.db"
+  backup_enabled: true
+  backup_interval_hours: 24
+
+# Bankroll settings
+bankroll:
+  initial_bankroll: 1000  # EUR
+  current_bankroll: 1000  # EUR
+  kelly_fraction: 0.25    # Quarter Kelly (conservative)
+  max_bet_percentage: 5   # Max 5% of bankroll per bet
+  min_bet_amount: 1       # EUR
+  currency: "EUR"
+
+# EV Detection settings
+ev_detection:
+  min_ev_percentage: 2.0      # Minimum +EV to alert
+  sharp_books: ["pinnacle"]   # Books to use as true odds baseline
+  soft_books: ["tipsport", "fortuna", "nike", "doxxbet", "bet365"]
+  margin_adjustment: true
+  closing_line_tracking: true
+
+# Arbitrage settings
+arbitrage:
+  min_profit_percentage: 1.0  # Minimum arb profit to alert
+  include_commission: true
+  max_stake: 500              # EUR
+  alert_enabled: true
+
+# CLV Tracking
+clv_tracking:
+  track_closing_odds: true
+  compare_to_pinnacle: true
+  track_hours_before_close: [24, 12, 6, 1]
+
+# Scraper settings
+scraping:
+  interval_seconds: 60        # How often to scrape
+  timeout_seconds: 30
+  max_retries: 3
+  use_proxy: false
+  proxy_list: []
+  rate_limit_per_second: 2
+  headless_browser: true
+
+# Telegram notifications
+telegram:
+  enabled: true
+  bot_token: ""               # Set in .env file
+  chat_id: ""                 # Set in .env file
+  notify_on:
+    - ev_opportunity
+    - arbitrage
+    - clv_beat
+    - bankroll_milestone
+  quiet_hours:
+    enabled: false
+    start: "23:00"
+    end: "07:00"
+
+# Sports focus
+sports:
+  enabled:
+    - football
+    - hockey
+    - tennis
+  leagues:
+    football:
+      - "Slovak Fortuna Liga"
+      - "Czech First League"
+      - "Premier League"
+      - "La Liga"
+      - "Bundesliga"
+      - "Serie A"
+      - "Ligue 1"
+      - "Champions League"
+      - "Europa League"
+    hockey:
+      - "Slovak Extraliga"
+      - "Czech Extraliga"
+      - "NHL"
+      - "KHL"
+      - "SHL"
+    tennis:
+      - "ATP"
+      - "WTA"
+      - "Grand Slams"
+      - "ATP Challenger"
+
+# Bonus tracking
+bonus:
+  track_rollovers: true
+  alert_on_completion: true
+  bookmakers:
+    tipsport:
+      typical_rollover: 5
+      max_odds_for_rollover: 1.50
+    fortuna:
+      typical_rollover: 6
+      max_odds_for_rollover: 1.40
+    nike:
+      typical_rollover: 5
+      max_odds_for_rollover: 1.50
+    doxxbet:
+      typical_rollover: 4
+      max_odds_for_rollover: 1.60
+
+# Dashboard settings
+dashboard:
+  port: 8501
+  theme: "dark"
+  auto_refresh_seconds: 30
+  default_date_range_days: 30
+
+# Logging
+logging:
+  level: "INFO"
+  file: "logs/betting_edge.log"
+  max_size_mb: 10
+  backup_count: 5
