@@ -37,6 +37,40 @@ clv_tracking:
   compare_to_pinnacle: true
   track_hours_before_close: [24, 12, 6, 1]
 
+# The Odds API (primary source for sharp odds)
+odds_api:
+  api_key: ""                 # Set in .env file - get at https://the-odds-api.com/
+  regions: "eu"
+  markets: "h2h"
+  # Bookmakers to fetch (pinnacle is most important)
+  bookmakers:
+    - pinnacle
+    - bet365
+    - unibet
+    - betway
+
+# Slovak Scrapers (soft books)
+slovak_scrapers:
+  tipsport:
+    enabled: true
+    # Option 1: External package (if you find a working one)
+    # package: "slovak_odds_scraper"
+    # class: "TipsportScraper"
+    proxy: ""                 # Set if needed
+    headless: true
+  fortuna:
+    enabled: true
+    proxy: ""
+    headless: true
+  nike:
+    enabled: true
+    proxy: ""
+    headless: true
+  doxxbet:
+    enabled: true
+    proxy: ""
+    headless: true
+
 # Scraper settings
 scraping:
   interval_seconds: 60        # How often to scrape

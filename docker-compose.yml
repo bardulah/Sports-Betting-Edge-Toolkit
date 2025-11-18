@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Main application with scheduler
+  app:
+    build: .
+    container_name: betting-edge-app
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - ODDS_API_KEY=${ODDS_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - DATABASE_PATH=/app/data/betting_edge.db
+    command: python -m src.scheduler
+    networks:
+      - betting-network
+
+  # Streamlit dashboard
+  dashboard:
+    build: .
+    container_name: betting-edge-dashboard
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    environment:
+      - ODDS_API_KEY=${ODDS_API_KEY}
+      - DATABASE_PATH=/app/data/betting_edge.db
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    networks:
+      - betting-network
+
+  # Telegram bot (optional - can run with scheduler)
+  telegram-bot:
+    build: .
+    container_name: betting-edge-bot
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - DATABASE_PATH=/app/data/betting_edge.db
+    command: python scripts/run_telegram_bot.py
+    networks:
+      - betting-network
+    profiles:
+      - bot  # Only start with: docker-compose --profile bot up
+
+networks:
+  betting-network:
+    driver: bridge
+
+volumes:
+  data:
+  logs:
